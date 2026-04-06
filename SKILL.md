@@ -18,6 +18,16 @@ This skill generates content. It does not audit existing pages. For auditing, us
 
 **Run this before anything else.** Identify what the user needs, then load only the reference files and workflow steps required for that task. Do not read all reference files upfront.
 
+### Step 0: Detect Environment and Mode
+
+Before classifying the task, determine the execution environment:
+
+1. **Check if running inside an IDE (Cursor, VS Code, etc.):** If the user's request is in the context of a codebase (file tree visible, terminal available, workspace open), the skill is running inside an IDE.
+2. **Check if the project is Next.js:** Look for `package.json` with `next` as a dependency, or `next.config.*` files in the workspace root.
+3. **If Next.js is detected and the output format is JSX/React:** Load [references/nextjs-integration-rules.md](references/nextjs-integration-rules.md) as an additional reference file for all content routes. This file is loaded alongside the route-specific references listed in the table below.
+4. **If the request is ambiguous or complex** (multiple content types needed, unclear target keyword, conflicting requirements, significant architectural decisions): Switch to Plan mode, ask clarifying questions, confirm the plan with the user, then switch back to normal mode for execution.
+5. **If the request is clear** (single content type, clear keyword, straightforward requirements): Stay in normal mode and use `AskQuestion` for context gathering.
+
 ### Step 1: Classify the Task
 
 Read the user's request and match it to one route from the table below. If the request is ambiguous, ask one clarifying question to determine the route before proceeding.
@@ -33,6 +43,8 @@ Read the user's request and match it to one route from the table below. If the r
 | `competitor-analysis-only` | "Analyze these competitors", "scrape these URLs", compare pages without drafting content | competitor-analysis-rules.md only                                                                                                                                | Competitor analysis section only, no content drafting |
 | `schema-only`              | "Generate schema", "add structured data", "JSON-LD for this page"                        | schema-by-content-type.md (relevant sections only)                                                                                                               | Step 5 only                                           |
 | `meta-tags-only`           | "Write meta tags", "title and description", "OG tags"                                    | None (instructions are inline in this file)                                                                                                                      | Step 6 only                                           |
+
+**Conditional reference:** If Step 0 detected a Next.js project and the output format is JSX/React, also read [references/nextjs-integration-rules.md](references/nextjs-integration-rules.md) for every content route (`blog-article`, `listicle`, `landing-page`, `product-page`, `directory-listing`, `programmatic-seo`) and for `schema-only`. This file is not needed for `meta-tags-only` or `competitor-analysis-only`.
 
 ### Step 2: Check for Competitor URLs
 
@@ -75,6 +87,16 @@ These pre-work steps apply to all content routes (`blog-article`, `listicle`, `l
 **1. Check for product marketing context:**
 If `.agents/product-marketing-context.md` exists (or `.claude/product-marketing-context.md` in older setups), read it first. Use that context and only ask the user for information not already covered.
 
+**1.5. Smart codebase scan (Next.js projects only):**
+If Step 0 detected a Next.js project, run the Smart Scan Procedure from [references/nextjs-integration-rules.md](references/nextjs-integration-rules.md) before generating any content. This scan identifies:
+- Project structure and conventions (App Router vs Pages Router, TypeScript, Tailwind, import aliases)
+- Existing SEO components and utilities to reuse (schema renderers, FAQ components, meta tag helpers)
+- Layout files and metadata patterns already in use
+- Pages in the same route area for consistency in structure and style
+- Data fetching patterns (fetch, Prisma, Supabase, CMS SDK) to match in generated code
+
+All generated code must match the patterns found during this scan. Do not generate code that contradicts detected conventions (e.g., do not use CSS Modules if the project uses Tailwind, do not use Pages Router patterns if the project uses App Router).
+
 **2. Read existing site content for voice matching:**
 If the user provides a URL, fetch 2-3 pages from their site. Analyze:
 - Regional English dialect (American, British, Australian, Canadian, etc.)
@@ -101,6 +123,8 @@ You must gather enough information to write content that fits the specific site,
 ---
 
 ## Context Gathering
+
+**Mode selection:** If the user's request is ambiguous (unclear content type, multiple possible approaches, conflicting requirements, needs significant architectural decisions), switch to Plan mode and ask clarifying questions before proceeding. Present the plan for user confirmation, then switch back to normal mode for execution. For clear, straightforward requests, stay in normal mode and use `AskQuestion` for the context gathering questions below.
 
 Before generating any content, gather the following. Use `AskQuestion` if available, otherwise ask conversationally. Skip questions already answered by product-marketing-context or prior conversation.
 
@@ -436,29 +460,101 @@ Append internal linking suggestions and the validation report as HTML comments o
 
 ### JSX / React (Next.js)
 
-Export a React component with Next.js `metadata` or `generateMetadata` for meta tags. Schema goes in a `<script>` tag within the component via `dangerouslySetInnerHTML`. Use TypeScript if the project uses TypeScript.
+Export a React component with Next.js `metadata` or `generateMetadata` for meta tags. Use the shared SEO components from [references/nextjs-integration-rules.md](references/nextjs-integration-rules.md) instead of inline boilerplate. Use TypeScript if the project uses TypeScript. Follow all conventions detected during the Smart Scan (Step 1.5).
+
+**Before generating:** Check if `SchemaJsonLd`, `FAQSection`, and `AnswerCapsule` components already exist in the project. If not, create them in the project's component directory (default: `src/components/seo/`). See [references/nextjs-integration-rules.md](references/nextjs-integration-rules.md) section B for the component implementations.
 
 ```tsx
 import type { Metadata } from "next";
+import { SchemaJsonLd } from "@/components/seo/schema-json-ld";
+import { FAQSection } from "@/components/seo/faq-section";
+import { AnswerCapsule } from "@/components/seo/answer-capsule";
 
 export const metadata: Metadata = {
-  title: "[Meta title]",
-  description: "[Meta description]",
-  openGraph: { /* OG properties */ },
-  twitter: { /* Twitter card properties */ },
+  title: "[Meta title, STRICTLY 50-59 chars]",
+  description: "[Meta description, STRICTLY 140-160 chars]",
+  openGraph: {
+    title: "[OG title]",
+    description: "[OG description]",
+    url: "[Canonical URL]",
+    images: [{ url: "[Image URL]", width: 1200, height: 630 }],
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "[Twitter title]",
+    description: "[Twitter description]",
+    images: ["[Image URL]"],
+  },
 };
 
+const faqItems = [
+  { question: "[Question 1]", answer: "[Answer 1]" },
+  { question: "[Question 2]", answer: "[Answer 2]" },
+];
+
+const articleSchema = { "@type": "Article", headline: "[Title]", /* ... */ };
+const faqSchema = { "@type": "FAQPage", mainEntity: /* ... */ };
+
 export default function PageName() {
-  const schemaData = { /* JSON-LD object */ };
+  return (
+    <>
+      <SchemaJsonLd schema={[articleSchema, faqSchema]} />
+      <article>
+        <h1>[Title with Primary Keyword]</h1>
+        {/* Opening paragraph: first 150 words, direct answer */}
+
+        <h2>[Question-style heading]</h2>
+        <AnswerCapsule>[40-60 word self-contained answer]</AnswerCapsule>
+        {/* Expanded content sections */}
+
+        <FAQSection items={faqItems} />
+      </article>
+    </>
+  );
+}
+```
+
+**For programmatic SEO pages**, use `generateMetadata` and `generateStaticParams` instead of static `metadata`:
+
+```tsx
+import type { Metadata } from "next";
+import { getItemBySlug, getAllSlugs } from "./_data";
+import { SchemaJsonLd } from "@/components/seo/schema-json-ld";
+import { FAQSection } from "@/components/seo/faq-section";
+import { AnswerCapsule } from "@/components/seo/answer-capsule";
+
+export async function generateStaticParams() {
+  const slugs = await getAllSlugs();
+  return slugs.map((slug) => ({ slug }));
+}
+
+export async function generateMetadata(
+  { params }: { params: Promise<{ slug: string }> }
+): Promise<Metadata> {
+  const { slug } = await params;
+  const item = await getItemBySlug(slug);
+  return {
+    title: item.metaTitle,
+    description: item.metaDescription,
+    /* ... OG, Twitter ... */
+  };
+}
+
+export default async function Page(
+  { params }: { params: Promise<{ slug: string }> }
+) {
+  const { slug } = await params;
+  const item = await getItemBySlug(slug);
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
-      />
+      <SchemaJsonLd schema={item.schemaData} />
       <article>
-        {/* Full content as JSX */}
+        <h1>{item.title}</h1>
+        <AnswerCapsule>{item.answerCapsule}</AnswerCapsule>
+        {/* Unique content per variable */}
+        <FAQSection items={item.faqItems} />
       </article>
     </>
   );
@@ -506,6 +602,31 @@ When generating pages at scale (e.g., `/glossary/[term]/`, `/for/[audience]/`, `
 
 **Batch generation must never produce thin content.** If unique data cannot be sourced for a variable, skip that page and flag it rather than generating a low-quality version.
 
+### Next.js Programmatic SEO
+
+For Next.js projects, programmatic SEO pages should use dynamic route segments (`[slug]`, `[term]`, `[city]`) with `generateStaticParams` for static generation at build time. Create a single page component with a data-fetching layer, not separate files per page.
+
+**File structure:**
+
+```
+app/
+  glossary/
+    [term]/
+      page.tsx              # Template component with generateStaticParams + generateMetadata
+      _data/
+        index.ts            # Data source providing unique content per term
+        types.ts            # TypeScript interfaces (if TS project)
+```
+
+**Key rules for Next.js pSEO:**
+
+1. Use `generateStaticParams` to export all known parameter values for build-time static generation
+2. Use `generateMetadata` (not static `metadata`) since meta tags vary per page
+3. Separate content data from the page component: keep unique-per-page data in a data layer (`_data/` directory, CMS, database), keep the template in `page.tsx`
+4. Reuse the shared SEO components (`SchemaJsonLd`, `FAQSection`, `AnswerCapsule`) across all generated pages
+5. Match the project's existing data fetching pattern detected during the Smart Scan
+6. See [references/nextjs-integration-rules.md](references/nextjs-integration-rules.md) section E for full implementation patterns
+
 ---
 
 ## Platform-Specific Optimization Tips
@@ -539,3 +660,4 @@ Apply these during drafting based on which platforms matter most to the user:
 - [references/schema-by-content-type.md](references/schema-by-content-type.md) -- JSON-LD schema per page type
 - [references/content-quality-checklist.md](references/content-quality-checklist.md) -- Post-generation validation checklist
 - [references/competitor-analysis-rules.md](references/competitor-analysis-rules.md) -- Competitor scraping, analysis, and outranking methodology
+- [references/nextjs-integration-rules.md](references/nextjs-integration-rules.md) -- Next.js codebase scanning, shared SEO components, code quality rules, and DRY patterns (loaded conditionally for JSX/Next.js output)
