@@ -21,8 +21,8 @@ Run every piece of generated content through this checklist before delivering it
 | 1.1 | H1 contains the primary keyword | Keyword present naturally | Keyword missing or forced |
 | 1.2 | Only one H1 per page | Single H1 | Multiple H1s or no H1 |
 | 1.3 | Heading hierarchy: H1 > H2 > H3, no skipped levels | Correct hierarchy | H1 > H3 skip or other violations |
-| 1.4 | Meta title is 50-60 characters | Within range, keyword near start | Too short, too long, or keyword missing |
-| 1.5 | Meta description is 150-160 characters | Within range, includes keyword and CTA | Too short, too long, or generic |
+| 1.4 | Meta title is STRICTLY 50-60 characters (must be >=50 and <60) | 50-59 characters, keyword near start. Count every character including spaces, pipes, and brand name. | Under 50, 60 or more, or keyword missing |
+| 1.5 | Meta description is STRICTLY 140-160 characters (must be >=140 and <=160) | 140-160 characters, includes keyword and CTA. Count every character including spaces and punctuation. | Under 140, over 160, or generic |
 | 1.6 | Primary keyword appears in first 150 words | Present naturally | Missing or forced |
 | 1.7 | Primary keyword density is 0.5-2.5% | Within range | Under 0.5% or over 2.5% |
 | 1.8 | Secondary keywords appear in H2 headings | 2-3 secondary keywords in H2s | No secondary keywords in headings |
@@ -50,6 +50,7 @@ Run every piece of generated content through this checklist before delivering it
 | 2.11 | FAQ answers include specific data points | Each answer has a number or named reference | Generic answers without data |
 | 2.12 | Every paragraph is self-contained | Can be quoted without surrounding context | Paragraphs depend on previous text |
 | 2.13 | Live internet research was performed | WebSearch/WebFetch used to gather latest data, stats, and developments on the topic before writing | Content written from training data alone without live research |
+| 2.14 | Zero citations to direct competitors | No links, citations, quotes, or references to any site that directly competes with the site being written for | Any citation or link pointing to a direct competitor's website or content |
 
 ---
 
@@ -68,6 +69,7 @@ Run every piece of generated content through this checklist before delivering it
 | 3.9 | No filler words without purpose | Filler words (basically, essentially, actually, obviously, etc.) removed or justified | Multiple purposeless filler words |
 | 3.10 | Content reads like human writing | Passes the "read aloud" test, sounds natural | Sounds robotic or corporate |
 | 3.11 | No banned structural patterns | No "Whether you're a [X], [Y], or [Z]..." or "By [gerund], you can..." | Banned patterns present |
+| 3.12 | ZERO fabricated facts | Every statistic has a real, named source found via live research. Every expert quote is from a real person who actually said it. Every data point is verifiable. No invented numbers, names, studies, or claims. | Any statistic without a real source, any invented quote or expert name, any made-up data point |
 
 ---
 
@@ -151,8 +153,8 @@ Present the validation results in this format:
 - [x] H1 contains primary keyword
 - [x] Single H1 per page
 - [x] Heading hierarchy correct
-- [x] Meta title: [XX] chars (target: 50-60)
-- [x] Meta description: [XX] chars (target: 150-160)
+- [x] Meta title: [XX] chars (STRICT: must be >=50 and <60)
+- [x] Meta description: [XX] chars (STRICT: must be >=140 and <=160)
 - [x] Primary keyword in first 150 words
 - [x] Keyword density: [X.X]%
 - [x] Secondary keywords in H2s
@@ -161,7 +163,7 @@ Present the validation results in this format:
 - [x] Twitter Card tags complete
 - [x] Image alt text guidance included
 
-### GEO Checks: [X/13 passed]
+### GEO Checks: [X/14 passed]
 - [x] Answer capsule after every question-style H2
 - [x] First 150 words answer the primary query directly
 - [x] Citation density: [X] sourced stats per section
@@ -175,8 +177,9 @@ Present the validation results in this format:
 - [x] FAQ answers include data points
 - [x] All paragraphs self-contained
 - [x] Live internet research performed for latest data
+- [x] Zero citations to direct competitors
 
-### Writing Quality: [X/11 passed]
+### Writing Quality: [X/12 passed]
 - [x] Zero em dashes
 - [x] Zero AI-tell verbs
 - [x] Zero AI-tell adjectives
@@ -188,6 +191,7 @@ Present the validation results in this format:
 - [x] No purposeless filler words
 - [x] Reads as human-written
 - [x] No banned structural patterns
+- [x] Zero fabricated facts: every stat, quote, and data point verified from real sources
 
 ### Regional English: [X/6 passed]
 - [x] Dialect: [American/British/Australian/Canadian]
@@ -238,6 +242,7 @@ Present the validation results in this format:
 If time or effort is limited, fix items in this order:
 
 **P0 (fix before publishing):**
+- Fabricated facts present (check 3.12) -- any invented statistic, fake quote, or made-up data point must be removed or replaced with verified data before publishing
 - Em dashes present (check 3.1)
 - AI-tell words present (checks 3.2, 3.3)
 - Missing FAQ section (check 2.9)
@@ -246,6 +251,7 @@ If time or effort is limited, fix items in this order:
 - Schema missing or invalid (checks 5.1, 5.2, 5.8)
 
 **P1 (fix soon):**
+- Citations pointing to direct competitors (check 2.14) -- replace with neutral third-party sources
 - No live internet research performed (check 2.13)
 - Unsourced statistics (check 2.3)
 - Missing expert quotes (check 2.5)
