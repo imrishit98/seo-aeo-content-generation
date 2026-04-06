@@ -127,7 +127,7 @@ JSON-LD structured data templates mapped to each content type. Include the appro
   "@context": "https://schema.org",
   "@type": "WebPage",
   "name": "[Page Title]",
-  "description": "[Meta description, 150-160 characters]",
+  "description": "[Meta description, STRICTLY 140-160 characters]",
   "url": "[Canonical URL]",
   "datePublished": "[YYYY-MM-DD]",
   "dateModified": "[YYYY-MM-DD]",
