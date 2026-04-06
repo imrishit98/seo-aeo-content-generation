@@ -181,7 +181,7 @@ After completing the analysis, apply these rules during content drafting. Every 
 ### Technical SEO
 
 15. **Use superior schema markup.** Include every schema type the competitor uses, plus any additional types appropriate for the content type (see [schema-by-content-type.md](schema-by-content-type.md)). If the competitor has no visible schema, adding it gives your content a significant advantage.
-16. **Write better meta tags.** Your title tag should be within 50-60 characters with the keyword near the front. Your meta description should be more compelling than the competitor's, with a clearer value proposition.
+16. **Write better meta tags.** Your title tag must be STRICTLY 50-59 characters (>=50 and <60) with the keyword near the front. Your meta description must be STRICTLY 140-160 characters (>=140 and <=160) and more compelling than the competitor's, with a clearer value proposition.
 
 ### Freshness
 
