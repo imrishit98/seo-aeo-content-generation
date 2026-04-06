@@ -93,6 +93,8 @@ Use `WebSearch` and `WebFetch` to pull the latest data, statistics, news, and de
 
 Incorporate what you find directly into the content with proper citations. If a search returns no useful results, note it and proceed with the best available data, but always attempt the search first. Fresh, accurate data is a top ranking signal for both Google and AI search engines.
 
+**Factual accuracy is absolute.** Never fabricate, invent, or approximate any statistic, quote, fact, company name, expert name, study result, or data point. Every number in the content must trace back to a real source found during live research. If you cannot verify a claim, use a `[NEEDS DATA]` placeholder and flag it to the user. One made-up fact destroys the credibility of the entire piece.
+
 **4. Never generate without context:**
 You must gather enough information to write content that fits the specific site, audience, and business goal. Do not guess. Ask.
 
@@ -124,6 +126,7 @@ Before generating any content, gather the following. Use `AskQuestion` if availa
 | 11  | **Specific data/stats to include** -- any proprietary data, case studies, or numbers?                                                                                                         | Proprietary data is the strongest differentiator for both SEO and GEO                                                                                                                                                                                                                                                                                 |
 | 12  | **Author information** -- name, title, credentials for the byline                                                                                                                             | E-E-A-T signals, schema markup                                                                                                                                                                                                                                                                                                                        |
 | 13  | **Tone/voice preferences** -- any specific style beyond what the site already uses?                                                                                                           | Overrides for this specific piece                                                                                                                                                                                                                                                                                                                     |
+| 14  | **Direct competitors to avoid citing** -- which companies or sites are direct competitors? List names or URLs.                                                                                | Citations must NEVER link to or reference direct competitors. Identifying them upfront prevents accidentally sending link equity or reader attention to a rival. If not provided, infer from the site's product/service and ask to confirm.                                                                                                            |
 
 ### Default Word Counts by Content Type
 
@@ -231,6 +234,8 @@ For each useful result, use `WebFetch` to pull the full page and extract specifi
 - Product documentation for technical claims
 - Named experts you can quote
 
+**NEVER cite direct competitors.** When choosing sources, identify the site's direct competitors (companies offering the same or very similar product/service to the same audience). Never link to, cite, quote from, or reference any direct competitor's website, blog, documentation, or content. Doing so sends link equity and reader attention to a rival. Instead, cite neutral third-party sources: research firms, industry analysts, government data, academic papers, trade publications, and non-competing industry experts. If the only available source for a data point is a direct competitor, find an alternative source or use a `[NEEDS DATA]` placeholder.
+
 If competitor URLs were analyzed, review the statistics and sources the competitors cite. Find newer or more authoritative versions of the same data. If a competitor cites a 2023 report, search for the 2025 or 2026 edition. If they cite a blog post, find the original research it references. Your citation list must be fresher and more authoritative than any competitor's.
 
 Do not cite other blog posts as primary sources. Go to the original research.
@@ -284,6 +289,7 @@ Read [references/writing-rules.md](references/writing-rules.md) for the complete
 - **No AI-tell words.** Never use: delve, leverage, utilize, foster, bolster, streamline, robust, comprehensive, pivotal, seamless, holistic, cutting-edge, groundbreaking, transformative.
 - **No AI-tell phrases.** Never open with "In today's...", "In an era of...", "In the ever-evolving landscape of...". Never use "That being said", "It's worth noting", "At its core", "Let's delve into".
 - **No AI-tell closings.** Never use "In conclusion...", "To sum up...", "All things considered...".
+- **ZERO fabricated facts.** Never invent statistics, quotes, data points, company names, expert names, study results, percentages, dollar figures, or any factual claim. Every statistic must come from a real, verifiable source found via live research. Every expert quote must be from a real person who actually said those words in a published source. If you cannot find a real source for a claim, do not include the claim. Leave a `[NEEDS DATA]` placeholder instead and tell the user. Making up a single fact is worse than having no fact at all.
 - **Paragraphs: 2-3 sentences max.** No exceptions.
 - **Vary sentence length.** No more than 2 consecutive sentences of similar word count.
 - **Match regional English dialect.** Every word must match the detected dialect.
@@ -311,10 +317,10 @@ Generate for every page:
 
 ```html
 <title>[Primary Keyword] - [Benefit or Angle] | [Brand]</title>
-<!-- 50-60 characters, primary keyword near the beginning -->
+<!-- STRICTLY 50-60 characters. Must be at least 50 and NEVER 60 or more. Count every character including spaces, pipes, and brand name. Primary keyword near the beginning. -->
 
 <meta name="description" content="[Compelling description with keyword, value prop, and implied CTA]">
-<!-- 150-160 characters -->
+<!-- STRICTLY 140-160 characters. Must be at least 140 and NEVER exceed 160. Count every character including spaces and punctuation. -->
 
 <meta property="og:title" content="[Title]">
 <meta property="og:description" content="[Description]">
@@ -343,18 +349,20 @@ Present the validation results to the user as a scored checklist:
 
 ### SEO Checks
 - [x] H1 contains primary keyword
-- [x] Meta title 50-60 chars
-- [x] Meta description 150-160 chars
+- [x] Meta title: strictly 50-60 chars (must be >=50 and <60)
+- [x] Meta description: strictly 140-160 chars (must be >=140 and <=160)
 - ...
 
 ### GEO Checks
 - [x] Answer capsule after every question-style H2
 - [x] 2-3 sourced stats per section
+- [x] Zero citations to direct competitors
 - ...
 
 ### Writing Quality
 - [x] Zero em dashes
 - [x] Zero AI-tell words
+- [x] Zero fabricated facts
 - [x] Regional English consistent (American/British/Australian/Canadian)
 - ...
 
