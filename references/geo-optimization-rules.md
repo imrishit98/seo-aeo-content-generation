@@ -98,6 +98,9 @@ Use inline citation format: "Claim (Source, Year)."
 - "Studies show that email marketing is effective." (no source, no number)
 - "Email marketing ROI is $42." (no source)
 - "According to studies, most traffic comes from search." (vague, no number)
+- "73% of marketers agree that..." (made-up statistic with no real source)
+
+**CRITICAL: Never fabricate statistics.** Every number must come from a real source found via `WebSearch` or `WebFetch`. If you cannot find a real statistic to support a claim, use `[NEEDS DATA]` instead of inventing one. A paragraph without a statistic is always better than a paragraph with a fabricated one.
 
 ### Source Quality Hierarchy
 
@@ -110,6 +113,20 @@ Prefer sources in this order:
 6. Third-party review aggregators (G2, Capterra, etc.)
 
 Avoid citing other blog posts as primary sources. Go to the original research.
+
+### NEVER Cite Direct Competitors
+
+**Absolute rule: Never cite, link to, quote from, or reference any direct competitor of the site you are generating content for.**
+
+A direct competitor is any company or website that offers the same or a substantially similar product, service, or content to the same target audience. Citing a competitor sends link equity to a rival, signals to search engines that the competitor is an authority, and risks sending readers to a competing product.
+
+**What to do instead:**
+- Cite neutral third-party sources: research firms, analyst reports, academic papers, government data, trade publications
+- Cite industry experts who are not affiliated with a competing product
+- If a data point is only available from a competitor's site, search for the original research the competitor cited, or use a `[NEEDS DATA]` placeholder
+- When comparing products (e.g., "[Product] vs [Competitor]" sections), state factual capabilities without linking to the competitor's site. Use neutral review platforms (G2, Capterra, Trustpilot) as sources for competitor data instead.
+
+**How to identify competitors:** Before selecting citations, ask yourself: "Does this source offer a product or service that directly competes with the site I am writing for?" If yes, do not cite it. When in doubt, ask the user.
 
 ### Freshness
 
@@ -147,9 +164,10 @@ Chen, VP of Engineering at Anthropic.
 
 1. Name the expert with their title and organization
 2. The quote must add information, not just restate what the text already says
-3. Attribute quotes accurately. Do not fabricate quotes.
-4. If real expert quotes are unavailable, use direct statements from official sources (company blog posts, conference talks, published interviews)
-5. Position quotes after a relevant data point or claim they support
+3. **NEVER fabricate quotes.** Every quote must come from a real, published source (interview, conference talk, blog post, press release, or official statement). Use `WebSearch` to find real quotes on the topic before writing.
+4. **Verify the person is real.** The expert you quote must be a real person with a verifiable role at the named organization. Do not invent expert names or titles.
+5. If real expert quotes are unavailable after searching, use direct statements from official sources (company blog posts, conference talks, published interviews). If no quotes can be found at all, omit the quote slot and flag it with `[NEEDS EXPERT QUOTE: topic]` for the user to fill.
+6. Position quotes after a relevant data point or claim they support
 
 ---
 
