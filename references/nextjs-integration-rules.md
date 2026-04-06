@@ -359,32 +359,9 @@ Match the project's detected styling approach:
 
 ### Page Generation Patterns
 
-**Single content page (blog post, landing page, product page):**
+**Single content page:** Generate `page.tsx` with `metadata` export, default page component, `SchemaJsonLd`, `AnswerCapsule`, and `FAQSection`. No inline `<script>` tags.
 
-Generate a single `page.tsx` file in the appropriate route segment. Include:
-- `metadata` or `generateMetadata` export at the top
-- Default-exported page component
-- `SchemaJsonLd` component call with all required schemas
-- Content sections using `AnswerCapsule` and `FAQSection` components
-- No inline schema `<script>` tags (delegate to `SchemaJsonLd`)
-
-**Programmatic SEO pages:**
-
-Generate a dynamic route with:
-- `page.tsx` with `generateMetadata` (dynamic, based on params)
-- `generateStaticParams` exporting all known param values
-- A data layer (function or file) providing unique content per param value
-- Shared template structure reusing the same SEO components
-
-```
-app/
-  glossary/
-    [term]/
-      page.tsx          # Template with generateStaticParams + generateMetadata
-  blog/
-    [slug]/
-      page.tsx          # Dynamic blog post page
-```
+**Programmatic SEO pages:** Generate dynamic route (`[slug]/page.tsx`) with `generateMetadata`, `generateStaticParams`, and a data layer providing unique content per param. See section E for details.
 
 ### Component Reuse Across Content Types
 
@@ -392,14 +369,7 @@ The shared SEO components (`SchemaJsonLd`, `FAQSection`, `AnswerCapsule`) work a
 
 ### Data Separation
 
-Separate content data from presentation:
-
-- **Schema data:** Define as a plain object or function, pass to `SchemaJsonLd`
-- **FAQ data:** Define as an array of `{question, answer}` objects, pass to `FAQSection`
-- **Metadata:** Define using `buildMetadata` helper or direct `metadata` export
-- **Page content:** Render in the page component's JSX
-
-This separation makes content updates easier without touching component logic, and keeps page files focused on structure rather than data wiring.
+Separate content data from presentation: schema data as plain objects passed to `SchemaJsonLd`, FAQ data as `{question, answer}[]` passed to `FAQSection`, metadata via `buildMetadata` or `metadata` export, and page content in JSX. This keeps page files focused on structure.
 
 ---
 
@@ -452,20 +422,6 @@ export async function generateMetadata(
 
 ### Data Layer
 
-The data layer provides unique content per variable. Each item must include at minimum:
+Each item must include at minimum: `slug`, `metaTitle` (50-59 chars), `metaDescription` (140-160 chars), unique `content`, `faqItems`, and `schemaData`.
 
-- `slug`: URL parameter value
-- `metaTitle`: Unique meta title (50-59 characters)
-- `metaDescription`: Unique meta description (140-160 characters)
-- `content`: Unique body content data (not shared across items)
-- `faqItems`: Unique FAQ questions and answers
-- `schemaData`: Pre-built schema objects for this specific item
-
-The data layer can source from:
-- A static TypeScript/JavaScript file with hardcoded data (simplest)
-- A CMS API call
-- A database query (Prisma, Supabase, etc.)
-- A JSON/YAML data file
-- A combination of static template + dynamic data
-
-Match the project's existing data fetching pattern detected during the Smart Scan.
+Data sources: static TS/JS file, CMS API, database query (Prisma, Supabase), JSON/YAML file, or static template + dynamic data. Match the project's existing data fetching pattern from the Smart Scan.
