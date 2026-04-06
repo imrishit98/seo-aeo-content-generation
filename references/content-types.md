@@ -468,5 +468,7 @@ These apply to every template above:
 6. **Tables:** Required for any comparison or multi-attribute data
 7. **FAQ section:** Required on every page, minimum 3 questions
 8. **Internal links:** Suggest 3-5 internal links to other pages on the site
-9. **Meta tags:** Title (50-60 chars), description (150-160 chars), OG tags, Twitter cards
+9. **Meta tags:** Title (STRICTLY 50-59 chars, must be >=50 and <60), description (STRICTLY 140-160 chars, must be >=140 and <=160), OG tags, Twitter cards
 10. **Schema:** Appropriate JSON-LD for the content type, always including FAQPage
+11. **Zero fabricated facts:** Never invent statistics, quotes, expert names, study results, or any factual claim. Every data point must come from a real, verifiable source found via live research. Use `[NEEDS DATA]` placeholders when data cannot be found.
+12. **Zero competitor citations:** Never cite, link to, or reference any direct competitor of the site you are writing for. Use neutral third-party sources instead.
