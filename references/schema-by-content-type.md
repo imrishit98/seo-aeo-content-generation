@@ -72,12 +72,7 @@ JSON-LD structured data templates mapped to each content type. Include the appro
 }
 ```
 
-**Placeholder notes:**
-- `headline`: Use the H1. Keep under 110 characters.
-- `datePublished` / `dateModified`: Use today's date for new content.
-- `author`: Use the author information gathered during context collection. If none provided, leave a placeholder for the user to fill.
-- `keywords`: Primary keyword + 2-3 secondary keywords.
-- `wordCount`: Actual word count of the generated content.
+**Notes:** `headline` = H1 (max 110 chars). Dates = today for new content. `author` = from context gathering (placeholder if not provided). `keywords` = primary + 2-3 secondary. `wordCount` = actual count.
 
 ---
 
@@ -149,9 +144,7 @@ JSON-LD structured data templates mapped to each content type. Include the appro
 }
 ```
 
-**Notes:**
-- Set `inLanguage` to match the detected regional English dialect
-- `speakable` CSS selectors should target the most quotable elements on the page
+**Notes:** Set `inLanguage` to match the detected dialect. `speakable` selectors should target the most quotable elements.
 
 ---
 
@@ -188,9 +181,7 @@ JSON-LD structured data templates mapped to each content type. Include the appro
 }
 ```
 
-**Notes:**
-- `sameAs` links are critical for entity clarity. Include every official profile.
-- `description` should use the "X is Y that Z" definition format.
+**Notes:** `sameAs` links are critical for entity clarity (include every official profile). `description` should use "X is Y that Z" format.
 
 ---
 
