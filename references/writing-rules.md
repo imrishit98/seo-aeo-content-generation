@@ -76,51 +76,27 @@ These words and phrases trigger AI detection tools and make content sound artifi
 | furthermore | also, and, plus, on top of that |
 | moreover | also, and, besides, what's more |
 | notwithstanding | despite, even so, still, regardless |
-| that being said | however, but, still, then again |
-| at its core | essentially, fundamentally, really, at the heart of it |
+| that being said / with that in mind | however, but, still, then again |
+| at its core / in essence | essentially, fundamentally, really, at the heart of it |
 | to put it simply | in short, simply put, put another way |
-| it is worth noting that | note that, importantly, keep in mind |
-| in the realm of | in, within, when it comes to |
-| in the landscape of | in, within, across |
+| it is worth noting/mentioning that | note that, importantly, keep in mind |
+| in the realm/landscape of | in, within, when it comes to |
 | in today's [anything] | currently, now, today, right now |
+| this begs the question | this raises the question |
 
 ### Banned Opening Phrases
 
-Never start content with any of these:
-- "In today's fast-paced world..."
-- "In today's digital age..."
-- "In an era of..."
-- "In the ever-evolving landscape of..."
-- "In the realm of..."
-- "It's important to note that..."
-- "Let's delve into..."
-- "Imagine a world where..."
-- "Picture this..."
-- "Have you ever wondered..."
-
-### Banned Transitional Phrases
-
-Never use mid-content:
-- "That being said..."
-- "With that in mind..."
-- "It's worth mentioning that..."
-- "At its core..."
-- "To put it simply..."
-- "In essence..."
-- "This begs the question..."
-- "Let's explore..."
-- "Now, let's dive into..."
+Never start content with:
+- "In today's..." / "In an era of..." / "In the ever-evolving landscape of..."
+- "It's important to note that..." / "Let's delve into..."
+- "Imagine a world where..." / "Picture this..." / "Have you ever wondered..."
 
 ### Banned Closing Phrases
 
 Never end content with:
-- "In conclusion..."
-- "To sum up..."
+- "In conclusion..." / "To sum up..." / "In the final analysis..."
+- "All things considered..." / "At the end of the day..." / "The bottom line is..."
 - "By [doing X], you can [achieve Y]..."
-- "In the final analysis..."
-- "All things considered..."
-- "At the end of the day..."
-- "The bottom line is..."
 
 ### Banned Structural Patterns
 
@@ -276,15 +252,42 @@ Match whatever pattern the existing content uses. If no existing content is avai
 
 ---
 
+## Factual Accuracy: Zero Tolerance for Fabrication
+
+**Absolute rule: Never fabricate any factual claim. Zero tolerance.**
+
+A single made-up statistic or invented expert quote destroys the credibility of the entire piece and harms E-E-A-T signals.
+
+### What Counts as Fabrication
+
+- Inventing statistics, expert names, quotes, studies, reports, case studies, or testimonials
+- Approximating or "rounding" data you are not sure about
+- Presenting training-data knowledge as sourced fact without live verification
+- Inventing dollar figures, ROI numbers, or growth percentages
+
+### What to Do Instead
+
+1. **Search first.** Use `WebSearch` and `WebFetch` to find real, verifiable data.
+2. **Cite the real source.** Format: "Claim (Source, Year)."
+3. **Use `[NEEDS DATA]` placeholders** when data is unavailable. Never substitute a made-up number.
+4. **Verify quotes are real.** Search for the exact quote or its published source before including it.
+5. **Prefer no data over fake data.**
+
+### Self-Check
+
+After generating, confirm for every statistic, quote, and factual claim: source exists and is named, number matches the source, quote is from a real person, year is accurate. Replace failures with `[NEEDS DATA]`.
+
+---
+
 ## Post-Writing Self-Check
 
-Run through these checks before delivering content:
+Run through before delivering:
 
-1. Search for `--` and `—` (em dashes). Replace all.
-2. Search for every word in the banned verbs, adjectives, and phrases lists. Replace all.
-3. Count sentences per paragraph. Fix any with 4+ sentences.
-4. Check for 3+ consecutive sentences of similar length. Vary them.
-5. Verify regional English consistency. Check 10 random words with regional variants.
-6. Read the opening paragraph. Does it sound like a human expert or a language model?
-7. Read the closing paragraph. Does it end with a banned closing phrase?
-8. Check for filler words. Remove any that add nothing to the meaning.
+1. Search for `--` and `—`. Replace all.
+2. Search for every banned verb, adjective, and phrase. Replace all.
+3. Fix any paragraphs with 4+ sentences.
+4. Fix any 3+ consecutive sentences of similar length.
+5. Verify regional English consistency (check 10 random words with regional variants).
+6. Read opening and closing paragraphs aloud. Rewrite if they sound like a language model.
+7. Remove purposeless filler words.
+8. **Verify every factual claim** has a real, named source. Replace failures with `[NEEDS DATA]`.

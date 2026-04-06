@@ -458,15 +458,15 @@ When generating multiple pages from this template:
 
 ## Cross-Template Rules
 
-These apply to every template above:
+These apply to every template above. Full specifications are in the referenced files.
 
-1. **H1:** One per page, contains the primary keyword
-2. **Heading hierarchy:** H1 > H2 > H3 only. No skipped levels (never H1 > H3)
-3. **Answer capsules:** Required after every question-style H2, 40-60 words, self-contained
-4. **First 150 words:** Must directly answer the primary query
-5. **Paragraphs:** 2-3 sentences maximum
-6. **Tables:** Required for any comparison or multi-attribute data
-7. **FAQ section:** Required on every page, minimum 3 questions
-8. **Internal links:** Suggest 3-5 internal links to other pages on the site
-9. **Meta tags:** Title (50-60 chars), description (150-160 chars), OG tags, Twitter cards
-10. **Schema:** Appropriate JSON-LD for the content type, always including FAQPage
+1. **H1:** One per page, contains the primary keyword. No heading level skips.
+2. **Answer capsules:** Required after every question-style H2, 40-60 words, self-contained
+3. **First 150 words:** Must directly answer the primary query
+4. **Paragraphs:** 2-3 sentences maximum
+5. **Tables:** Required for any comparison or multi-attribute data
+6. **FAQ section:** Required on every page, minimum 3 questions
+7. **Internal links:** Suggest 3-5 internal links to other pages on the site
+8. **Meta tags:** Title (STRICTLY 50-59 chars), description (STRICTLY 140-160 chars), OG tags, Twitter cards
+9. **Schema:** Appropriate JSON-LD for the content type, always including FAQPage
+10. **Zero fabricated facts / Zero competitor citations:** See [writing-rules.md](writing-rules.md) and [geo-optimization-rules.md](geo-optimization-rules.md)

@@ -98,6 +98,9 @@ Use inline citation format: "Claim (Source, Year)."
 - "Studies show that email marketing is effective." (no source, no number)
 - "Email marketing ROI is $42." (no source)
 - "According to studies, most traffic comes from search." (vague, no number)
+- "73% of marketers agree that..." (made-up statistic with no real source)
+
+**CRITICAL: Never fabricate statistics.** Every number must come from a real source found via `WebSearch` or `WebFetch`. Use `[NEEDS DATA]` for unverifiable claims. See [writing-rules.md](writing-rules.md) for full fabrication rules.
 
 ### Source Quality Hierarchy
 
@@ -110,6 +113,16 @@ Prefer sources in this order:
 6. Third-party review aggregators (G2, Capterra, etc.)
 
 Avoid citing other blog posts as primary sources. Go to the original research.
+
+### NEVER Cite Direct Competitors
+
+**Absolute rule: Never cite, link to, quote from, or reference any direct competitor** (any company offering the same or similar product/service to the same audience).
+
+**What to do instead:**
+- Cite neutral third-party sources: research firms, analyst reports, academic papers, government data, trade publications
+- If a data point is only available from a competitor, find the original research or use `[NEEDS DATA]`
+- For "[Product] vs [Competitor]" sections, state factual capabilities without linking to the competitor. Use neutral review platforms (G2, Capterra, Trustpilot) as sources.
+- When in doubt whether a source is a competitor, ask the user.
 
 ### Freshness
 
@@ -147,8 +160,8 @@ Chen, VP of Engineering at Anthropic.
 
 1. Name the expert with their title and organization
 2. The quote must add information, not just restate what the text already says
-3. Attribute quotes accurately. Do not fabricate quotes.
-4. If real expert quotes are unavailable, use direct statements from official sources (company blog posts, conference talks, published interviews)
+3. **NEVER fabricate quotes.** Every quote must come from a real, published source. Use `WebSearch` to find real quotes before writing. Verify the person is real with a verifiable role.
+4. If no real quotes can be found, flag with `[NEEDS EXPERT QUOTE: topic]` for the user to fill
 5. Position quotes after a relevant data point or claim they support
 
 ---
@@ -262,32 +275,13 @@ Different AI systems extract and cite content differently. Apply these tips duri
 
 ## Content Structure for Maximum AI Extraction
 
-### Heading Hierarchy
+### Heading and Paragraph Rules
 
-```
-H1: [Primary keyword in clear title]
-  H2: [Question people search for]
-    H3: [Subtopic if needed]
-  H2: [Question people search for]
-    H3: [Subtopic]
-    H3: [Subtopic]
-  H2: Frequently Asked Questions
-    H3: [Question]
-    H3: [Question]
-```
+Follow the heading hierarchy and paragraph rules from [writing-rules.md](writing-rules.md). Key GEO additions:
 
-Rules:
-- One H1 per page
-- H2s phrased as questions when possible
-- No heading level skips (H1 > H3 is not allowed)
+- H2s phrased as questions when possible (matches "People Also Ask" queries)
 - Answer capsule immediately after each question-style H2
-
-### Paragraph Structure
-
-- 2-3 sentences per paragraph
-- First sentence makes the key claim
-- Second sentence provides evidence or data
-- Third sentence (optional) adds context or implication
+- First sentence of each paragraph makes the key claim; second provides evidence; third adds context
 
 ### List and Table Placement
 

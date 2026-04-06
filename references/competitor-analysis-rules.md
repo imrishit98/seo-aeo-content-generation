@@ -8,14 +8,7 @@ This process applies to any URL the user wants to surpass: direct competitors, p
 
 ## When to Trigger
 
-Run this analysis when the user provides one or more URLs in response to the context gathering question about content to outrank. This includes:
-
-- Competitor blog posts, landing pages, or product pages
-- Pages currently ranking on page 1 for the target keyword
-- Any webpage the user considers a quality benchmark or threat
-- The user's own existing content they want to improve upon
-
-If no URLs are provided, skip this process and proceed with standard SERP research in Step 1 of the content generation workflow.
+Run when the user provides URLs to outrank (competitor pages, currently-ranking pages, benchmarks, or their own existing content). If no URLs are provided, skip and proceed with standard SERP research.
 
 ---
 
@@ -181,7 +174,7 @@ After completing the analysis, apply these rules during content drafting. Every 
 ### Technical SEO
 
 15. **Use superior schema markup.** Include every schema type the competitor uses, plus any additional types appropriate for the content type (see [schema-by-content-type.md](schema-by-content-type.md)). If the competitor has no visible schema, adding it gives your content a significant advantage.
-16. **Write better meta tags.** Your title tag should be within 50-60 characters with the keyword near the front. Your meta description should be more compelling than the competitor's, with a clearer value proposition.
+16. **Write better meta tags.** Your title tag must be STRICTLY 50-59 characters (>=50 and <60) with the keyword near the front. Your meta description must be STRICTLY 140-160 characters (>=140 and <=160) and more compelling than the competitor's, with a clearer value proposition.
 
 ### Freshness
 
@@ -192,36 +185,7 @@ After completing the analysis, apply these rules during content drafting. Every 
 
 ## Presenting the Analysis
 
-Present the competitor analysis to the user **before** starting the draft. This gives the user a chance to:
-
-- Confirm the gaps and strengths are accurate
-- Add context the scraping may have missed
-- Prioritize which gaps matter most for their audience
-- Adjust the content direction based on the findings
-
-Format the presentation as:
-
-```markdown
-## Competitor Analysis Complete
-
-I analyzed [X] competitor page(s). Here is what I found:
-
-[Per-URL reports]
-
-[Combined analysis if multiple URLs]
-
-### Content Strategy Summary
-Based on this analysis, your content will:
-1. Cover all [X] topics the competitors cover, plus [Y] additional topics they miss
-2. Include [X+5] sourced statistics (competitors average [X])
-3. Include [X+2] expert quotes with attribution
-4. Add [X] structured tables (competitors average [Y])
-5. Include [X+3] FAQ questions (best competitor has [X])
-6. Use answer capsules after every question-style H2 (competitor [does/does not])
-7. Include [schema types] structured data
-
-Shall I proceed with drafting, or would you like to adjust the strategy?
-```
+Present the competitor analysis to the user **before** starting the draft. Include per-URL reports, combined analysis (if multiple URLs), and a Content Strategy Summary listing how your content will exceed competitors on each dimension (topics, statistics, quotes, tables, FAQ questions, answer capsules, schema). Ask: "Shall I proceed with drafting, or would you like to adjust the strategy?"
 
 ---
 

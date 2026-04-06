@@ -18,6 +18,16 @@ This skill generates content. It does not audit existing pages. For auditing, us
 
 **Run this before anything else.** Identify what the user needs, then load only the reference files and workflow steps required for that task. Do not read all reference files upfront.
 
+### Step 0: Detect Environment and Mode
+
+Before classifying the task, determine the execution environment:
+
+1. **Check if running inside an IDE (Cursor, VS Code, etc.):** If the user's request is in the context of a codebase (file tree visible, terminal available, workspace open), the skill is running inside an IDE.
+2. **Check if the project is Next.js:** Look for `package.json` with `next` as a dependency, or `next.config.*` files in the workspace root.
+3. **If Next.js is detected and the output format is JSX/React:** Load [references/nextjs-integration-rules.md](references/nextjs-integration-rules.md) as an additional reference file for all content routes. This file is loaded alongside the route-specific references listed in the table below.
+4. **If the request is ambiguous or complex** (multiple content types needed, unclear target keyword, conflicting requirements, significant architectural decisions): Switch to Plan mode, ask clarifying questions, confirm the plan with the user, then switch back to normal mode for execution.
+5. **If the request is clear** (single content type, clear keyword, straightforward requirements): Stay in normal mode and use `AskQuestion` for context gathering.
+
 ### Step 1: Classify the Task
 
 Read the user's request and match it to one route from the table below. If the request is ambiguous, ask one clarifying question to determine the route before proceeding.
@@ -33,6 +43,8 @@ Read the user's request and match it to one route from the table below. If the r
 | `competitor-analysis-only` | "Analyze these competitors", "scrape these URLs", compare pages without drafting content | competitor-analysis-rules.md only                                                                                                                                | Competitor analysis section only, no content drafting |
 | `schema-only`              | "Generate schema", "add structured data", "JSON-LD for this page"                        | schema-by-content-type.md (relevant sections only)                                                                                                               | Step 5 only                                           |
 | `meta-tags-only`           | "Write meta tags", "title and description", "OG tags"                                    | None (instructions are inline in this file)                                                                                                                      | Step 6 only                                           |
+
+**Conditional reference:** If Step 0 detected a Next.js project and the output format is JSX/React, also read [references/nextjs-integration-rules.md](references/nextjs-integration-rules.md) for every content route (`blog-article`, `listicle`, `landing-page`, `product-page`, `directory-listing`, `programmatic-seo`) and for `schema-only`. This file is not needed for `meta-tags-only` or `competitor-analysis-only`.
 
 ### Step 2: Check for Competitor URLs
 
@@ -54,15 +66,9 @@ Before proceeding, state the classified route and the output format to the user 
 
 ## Content Volume
 
-**Generate 1-2 pieces of content per session for the highest quality output.**
+**Generate 1-2 pieces of content per session** (programmatic SEO: 2-3 pages after defining the template). Utility routes have no strict limit.
 
-Each piece of content requires deep research, competitor analysis, careful drafting, and thorough validation. Spreading context across too many pieces reduces research depth, weakens GEO optimization, and lowers overall quality.
-
-- **Content routes (blog, listicle, landing page, product page, directory listing):** 1-2 pieces per session.
-- **Programmatic SEO:** Define the template once, then generate 2-3 pages per session maximum.
-- **Utility routes (schema-only, meta-tags-only, competitor-analysis-only):** No strict limit, but keep requests focused.
-
-If the user asks for 3+ pieces of content in one session, explain the quality trade-off and recommend splitting across sessions: "Each piece gets deeper research, better sourced statistics, and more thorough validation when I focus on 1-2 at a time. Want me to start with the highest-priority piece?"
+If the user asks for 3+ pieces, explain the quality trade-off and recommend splitting: "Each piece gets deeper research and more thorough validation when I focus on 1-2 at a time. Want me to start with the highest-priority piece?"
 
 Never silently reduce research depth, skip validation steps, or shorten content to fit more pieces into a single session.
 
@@ -74,6 +80,16 @@ These pre-work steps apply to all content routes (`blog-article`, `listicle`, `l
 
 **1. Check for product marketing context:**
 If `.agents/product-marketing-context.md` exists (or `.claude/product-marketing-context.md` in older setups), read it first. Use that context and only ask the user for information not already covered.
+
+**1.5. Smart codebase scan (Next.js projects only):**
+If Step 0 detected a Next.js project, run the Smart Scan Procedure from [references/nextjs-integration-rules.md](references/nextjs-integration-rules.md) before generating any content. This scan identifies:
+- Project structure and conventions (App Router vs Pages Router, TypeScript, Tailwind, import aliases)
+- Existing SEO components and utilities to reuse (schema renderers, FAQ components, meta tag helpers)
+- Layout files and metadata patterns already in use
+- Pages in the same route area for consistency in structure and style
+- Data fetching patterns (fetch, Prisma, Supabase, CMS SDK) to match in generated code
+
+All generated code must match the patterns found during this scan. Do not generate code that contradicts detected conventions (e.g., do not use CSS Modules if the project uses Tailwind, do not use Pages Router patterns if the project uses App Router).
 
 **2. Read existing site content for voice matching:**
 If the user provides a URL, fetch 2-3 pages from their site. Analyze:
@@ -93,6 +109,8 @@ Use `WebSearch` and `WebFetch` to pull the latest data, statistics, news, and de
 
 Incorporate what you find directly into the content with proper citations. If a search returns no useful results, note it and proceed with the best available data, but always attempt the search first. Fresh, accurate data is a top ranking signal for both Google and AI search engines.
 
+**Factual accuracy is absolute.** Never fabricate any statistic, quote, or data point. Every number must trace to a real source found via live research. Use `[NEEDS DATA]` placeholders for unverifiable claims. Full rules in [references/writing-rules.md](references/writing-rules.md).
+
 **4. Never generate without context:**
 You must gather enough information to write content that fits the specific site, audience, and business goal. Do not guess. Ask.
 
@@ -100,7 +118,7 @@ You must gather enough information to write content that fits the specific site,
 
 ## Context Gathering
 
-Before generating any content, gather the following. Use `AskQuestion` if available, otherwise ask conversationally. Skip questions already answered by product-marketing-context or prior conversation.
+Before generating any content, gather the following. Use `AskQuestion` if available, otherwise ask conversationally. Skip questions already answered by product-marketing-context or prior conversation. For ambiguous requests, switch to Plan mode first (see Step 0).
 
 ### Required Information
 
@@ -124,6 +142,7 @@ Before generating any content, gather the following. Use `AskQuestion` if availa
 | 11  | **Specific data/stats to include** -- any proprietary data, case studies, or numbers?                                                                                                         | Proprietary data is the strongest differentiator for both SEO and GEO                                                                                                                                                                                                                                                                                 |
 | 12  | **Author information** -- name, title, credentials for the byline                                                                                                                             | E-E-A-T signals, schema markup                                                                                                                                                                                                                                                                                                                        |
 | 13  | **Tone/voice preferences** -- any specific style beyond what the site already uses?                                                                                                           | Overrides for this specific piece                                                                                                                                                                                                                                                                                                                     |
+| 14  | **Direct competitors to avoid citing** -- which companies or sites are direct competitors? List names or URLs.                                                                                | Citations must NEVER link to or reference direct competitors. Identifying them upfront prevents accidentally sending link equity or reader attention to a rival. If not provided, infer from the site's product/service and ask to confirm.                                                                                                            |
 
 ### Default Word Counts by Content Type
 
@@ -138,54 +157,17 @@ Before generating any content, gather the following. Use `AskQuestion` if availa
 
 ---
 
-## Regional English Detection
-
-When you fetch existing site content, determine the regional English dialect and apply it consistently to all generated content.
-
-### Detection Method
-
-1. Check the site's `<html lang="">` attribute
-2. Look for spelling patterns in existing content:
-   - **American**: optimize, color, analyze, center, license (noun+verb)
-   - **British**: optimise, colour, analyse, centre, licence (noun) / license (verb)
-   - **Australian**: optimise, colour, analyse, centre (follows British spelling with local vocabulary)
-   - **Canadian**: optimize, colour, analyse, centre (hybrid: American verbs, British nouns)
-3. Check date formats: MM/DD/YYYY (American), DD/MM/YYYY (British/Australian), YYYY-MM-DD (Canadian/technical)
-4. Check currency and measurement references
-
-### Application
-
-Once detected, apply the dialect consistently across:
-- All spelling (optimise vs optimize, etc.)
-- Vocabulary (holiday vs vacation, mobile vs cell phone, uni vs college)
-- Date formats in content
-- Currency symbols and formatting
-- Measurement units (metric vs imperial)
-
-If dialect cannot be determined, default to **American English** and note this in the output.
-
----
-
 ## Competitor Content Analysis
 
-**Conditional section.** Only read [references/competitor-analysis-rules.md](references/competitor-analysis-rules.md) and execute this section if the user provides competitor URLs to outrank. If no URLs are provided during context gathering (question 8) and the user declines when asked, skip this entire section and proceed with standard SERP research in Step 1. This saves significant context for the actual content generation.
+**Conditional section.** Only read [references/competitor-analysis-rules.md](references/competitor-analysis-rules.md) and execute this section if the user provides competitor URLs to outrank. If no URLs are provided during context gathering (question 8) and the user declines when asked, skip this entire section and proceed with standard SERP research in Step 1.
 
-When the user provides URLs of pages they want to outrank, run a full competitor analysis **before** drafting any content. This analysis shapes the entire content strategy.
+When competitor URLs are provided, follow this procedure:
 
-**1. Ask if not already answered:**
-During context gathering, if the user has not mentioned competitor URLs, ask: "Do you have any existing pages or competitor URLs you want this content to outrank? I can scrape and analyze them to make sure your content beats them on every dimension."
-
-**2. Scrape each URL:**
-Use `WebFetch` on every URL the user provides. Extract the full content and record: heading structure, word count, topics covered, statistics cited (with sources), expert quotes, FAQ questions, schema markup, publication date, and content gaps. See [references/competitor-analysis-rules.md](references/competitor-analysis-rules.md) for the complete extraction checklist.
-
-**3. Build the analysis report:**
-For each URL, fill out the structured Competitor Analysis Report from the reference file. For multiple URLs, also produce a Combined Analysis with a topic coverage matrix, best-in-class benchmarks, universal gaps, and shared weaknesses.
-
-**4. Present before drafting:**
-Show the competitor analysis to the user before writing. Let them confirm the gaps, adjust priorities, or add context the scraping may have missed. Do not start drafting until the user approves the content strategy derived from the analysis.
-
-**5. Apply outranking rules during drafting:**
-Every outranking rule in [references/competitor-analysis-rules.md](references/competitor-analysis-rules.md) is mandatory when competitor URLs were provided. The content must cover every topic the competitors cover, fill every gap identified, include more sourced statistics, include more expert quotes, use better structured data, write a stronger opening, add a more complete FAQ section, and use superior schema markup.
+1. **Ask** if not already answered during context gathering: "Do you have any existing pages or competitor URLs you want this content to outrank?"
+2. **Scrape** each URL using `WebFetch`. Extract data points per the checklist in [references/competitor-analysis-rules.md](references/competitor-analysis-rules.md).
+3. **Build the analysis report** using the templates in the reference file (per-URL report + Combined Analysis for multiple URLs).
+4. **Present before drafting.** Get user confirmation before writing. Do not start drafting until the user approves the strategy.
+5. **Apply all outranking rules** from [references/competitor-analysis-rules.md](references/competitor-analysis-rules.md) during drafting. Every rule is mandatory when competitor URLs were provided.
 
 ---
 
@@ -231,9 +213,9 @@ For each useful result, use `WebFetch` to pull the full page and extract specifi
 - Product documentation for technical claims
 - Named experts you can quote
 
-If competitor URLs were analyzed, review the statistics and sources the competitors cite. Find newer or more authoritative versions of the same data. If a competitor cites a 2023 report, search for the 2025 or 2026 edition. If they cite a blog post, find the original research it references. Your citation list must be fresher and more authoritative than any competitor's.
+**NEVER cite direct competitors.** Never link to, cite, or reference any direct competitor's website or content. Use neutral third-party sources instead. Full rules in [references/geo-optimization-rules.md](references/geo-optimization-rules.md).
 
-Do not cite other blog posts as primary sources. Go to the original research.
+If competitor URLs were analyzed, review the statistics they cite and find newer or more authoritative versions of the same data. Your citation list must be fresher and more authoritative than any competitor's. Go to original research, not blog posts.
 
 ### Step 2: Select Content Structure
 
@@ -276,18 +258,14 @@ Apply all GEO optimization rules during drafting. Read [references/geo-optimizat
 
 **Routes:** `blog-article`, `listicle`, `landing-page`, `product-page`, `directory-listing`, `programmatic-seo`. **Skip for:** `schema-only`, `meta-tags-only`, `competitor-analysis-only`.
 
-Read [references/writing-rules.md](references/writing-rules.md) for the complete specification.
+Read [references/writing-rules.md](references/writing-rules.md) for the complete specification. Key non-negotiable rules:
 
-**Non-negotiable rules:**
-
-- **No em dashes.** Not one. Use commas, colons, semicolons, or parentheses instead.
-- **No AI-tell words.** Never use: delve, leverage, utilize, foster, bolster, streamline, robust, comprehensive, pivotal, seamless, holistic, cutting-edge, groundbreaking, transformative.
-- **No AI-tell phrases.** Never open with "In today's...", "In an era of...", "In the ever-evolving landscape of...". Never use "That being said", "It's worth noting", "At its core", "Let's delve into".
-- **No AI-tell closings.** Never use "In conclusion...", "To sum up...", "All things considered...".
-- **Paragraphs: 2-3 sentences max.** No exceptions.
+- **No em dashes.** Use commas, colons, semicolons, or parentheses instead.
+- **No AI-tell words or phrases.** See banned lists in writing-rules.md.
+- **ZERO fabricated facts.** Use `[NEEDS DATA]` placeholders for unverifiable claims.
+- **Paragraphs: 2-3 sentences max.**
 - **Vary sentence length.** No more than 2 consecutive sentences of similar word count.
-- **Match regional English dialect.** Every word must match the detected dialect.
-- **Read every sentence mentally.** If it sounds like a corporate press release, rewrite it.
+- **Match regional English dialect.** See detection and application rules in writing-rules.md.
 
 ### Step 5: Add Schema Markup
 
@@ -311,10 +289,10 @@ Generate for every page:
 
 ```html
 <title>[Primary Keyword] - [Benefit or Angle] | [Brand]</title>
-<!-- 50-60 characters, primary keyword near the beginning -->
+<!-- STRICTLY 50-60 characters. Must be at least 50 and NEVER 60 or more. Count every character including spaces, pipes, and brand name. Primary keyword near the beginning. -->
 
 <meta name="description" content="[Compelling description with keyword, value prop, and implied CTA]">
-<!-- 150-160 characters -->
+<!-- STRICTLY 140-160 characters. Must be at least 140 and NEVER exceed 160. Count every character including spaces and punctuation. -->
 
 <meta property="og:title" content="[Title]">
 <meta property="og:description" content="[Description]">
@@ -343,18 +321,20 @@ Present the validation results to the user as a scored checklist:
 
 ### SEO Checks
 - [x] H1 contains primary keyword
-- [x] Meta title 50-60 chars
-- [x] Meta description 150-160 chars
+- [x] Meta title: strictly 50-60 chars (must be >=50 and <60)
+- [x] Meta description: strictly 140-160 chars (must be >=140 and <=160)
 - ...
 
 ### GEO Checks
 - [x] Answer capsule after every question-style H2
 - [x] 2-3 sourced stats per section
+- [x] Zero citations to direct competitors
 - ...
 
 ### Writing Quality
 - [x] Zero em dashes
 - [x] Zero AI-tell words
+- [x] Zero fabricated facts
 - [x] Regional English consistent (American/British/Australian/Canadian)
 - ...
 
@@ -428,34 +408,13 @@ Append internal linking suggestions and the validation report as HTML comments o
 
 ### JSX / React (Next.js)
 
-Export a React component with Next.js `metadata` or `generateMetadata` for meta tags. Schema goes in a `<script>` tag within the component via `dangerouslySetInnerHTML`. Use TypeScript if the project uses TypeScript.
+Export a React component with Next.js `metadata` or `generateMetadata` for meta tags. Use the shared SEO components (`SchemaJsonLd`, `FAQSection`, `AnswerCapsule`) from [references/nextjs-integration-rules.md](references/nextjs-integration-rules.md) section B instead of inline boilerplate. Default to JavaScript (`.jsx`); use TypeScript (`.tsx`) only if the project uses TypeScript. Follow all conventions detected during the Smart Scan (Step 1.5).
 
-```tsx
-import type { Metadata } from "next";
+**Before generating:** Check if these components already exist in the project. If not, create them in the project's component directory (default: `src/components/seo/`).
 
-export const metadata: Metadata = {
-  title: "[Meta title]",
-  description: "[Meta description]",
-  openGraph: { /* OG properties */ },
-  twitter: { /* Twitter card properties */ },
-};
+**Static content pages:** Use `metadata` export + default page component with `SchemaJsonLd`, `AnswerCapsule`, and `FAQSection`. See [references/nextjs-integration-rules.md](references/nextjs-integration-rules.md) section D for the full pattern.
 
-export default function PageName() {
-  const schemaData = { /* JSON-LD object */ };
-
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
-      />
-      <article>
-        {/* Full content as JSX */}
-      </article>
-    </>
-  );
-}
-```
+**Programmatic SEO pages:** Use `generateMetadata` + `generateStaticParams` + data layer. See [references/nextjs-integration-rules.md](references/nextjs-integration-rules.md) section E for the full pattern.
 
 Append internal linking suggestions and the validation report as a separate markdown section after the code.
 
@@ -482,8 +441,6 @@ In all formats, always include internal linking suggestions and the validation r
 
 **Route:** `programmatic-seo` only. Skip this section for all other routes.
 
-**Volume limit:** Define the template once, then generate 2-3 pages per session maximum. Each page requires unique research and data, so quality drops sharply beyond 3 pages in a single session.
-
 When generating pages at scale (e.g., `/glossary/[term]/`, `/for/[audience]/`, `/compare/[x]-vs-[y]/`):
 
 1. Define the **template structure** once using Template 6 from [references/content-types.md](references/content-types.md)
@@ -497,6 +454,31 @@ When generating pages at scale (e.g., `/glossary/[term]/`, `/for/[audience]/`, `
 5. Validate that no two pages share more than 40% of their content
 
 **Batch generation must never produce thin content.** If unique data cannot be sourced for a variable, skip that page and flag it rather than generating a low-quality version.
+
+### Next.js Programmatic SEO
+
+For Next.js projects, programmatic SEO pages should use dynamic route segments (`[slug]`, `[term]`, `[city]`) with `generateStaticParams` for static generation at build time. Create a single page component with a data-fetching layer, not separate files per page.
+
+**File structure:**
+
+```
+app/
+  glossary/
+    [term]/
+      page.jsx              # Template component with generateStaticParams + generateMetadata
+      _data/
+        index.js            # Data source providing unique content per term
+        types.ts            # Optional: TypeScript interfaces (TS projects only)
+```
+
+**Key rules for Next.js pSEO:**
+
+1. Use `generateStaticParams` to export all known parameter values for build-time static generation
+2. Use `generateMetadata` (not static `metadata`) since meta tags vary per page
+3. Separate content data from the page component: keep unique-per-page data in a data layer (`_data/` directory, CMS, database), keep the template in `page.jsx` (or `page.tsx` if the project uses TypeScript)
+4. Reuse the shared SEO components (`SchemaJsonLd`, `FAQSection`, `AnswerCapsule`) across all generated pages
+5. Match the project's existing data fetching pattern detected during the Smart Scan
+6. See [references/nextjs-integration-rules.md](references/nextjs-integration-rules.md) section E for full implementation patterns
 
 ---
 
@@ -531,3 +513,4 @@ Apply these during drafting based on which platforms matter most to the user:
 - [references/schema-by-content-type.md](references/schema-by-content-type.md) -- JSON-LD schema per page type
 - [references/content-quality-checklist.md](references/content-quality-checklist.md) -- Post-generation validation checklist
 - [references/competitor-analysis-rules.md](references/competitor-analysis-rules.md) -- Competitor scraping, analysis, and outranking methodology
+- [references/nextjs-integration-rules.md](references/nextjs-integration-rules.md) -- Next.js codebase scanning, shared SEO components, code quality rules, and DRY patterns (loaded conditionally for JSX/Next.js output)
