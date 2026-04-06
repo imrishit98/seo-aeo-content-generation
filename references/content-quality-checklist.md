@@ -239,30 +239,8 @@ Present the validation results in this format:
 
 ## Priority of Fixes
 
-If time or effort is limited, fix items in this order:
+**P0 (fix before publishing):** 3.12 (fabricated facts), 3.1 (em dashes), 3.2/3.3 (AI-tell words), 2.9 (FAQ missing), 2.1 (answer capsules), 2.2 (first 150 words), 5.1/5.2/5.8 (schema)
 
-**P0 (fix before publishing):**
-- Fabricated facts present (check 3.12) -- any invented statistic, fake quote, or made-up data point must be removed or replaced with verified data before publishing
-- Em dashes present (check 3.1)
-- AI-tell words present (checks 3.2, 3.3)
-- Missing FAQ section (check 2.9)
-- No answer capsules (check 2.1)
-- First 150 words do not answer the query (check 2.2)
-- Schema missing or invalid (checks 5.1, 5.2, 5.8)
+**P1 (fix soon):** 2.14 (competitor citations), 2.13 (live research), 2.3 (unsourced stats), 2.5 (expert quotes), 2.6 (tables for comparisons), 3.7 (paragraph length), section 4 (regional English), 7.1/7.9 (competitor coverage, if applicable)
 
-**P1 (fix soon):**
-- Citations pointing to direct competitors (check 2.14) -- replace with neutral third-party sources
-- No live internet research performed (check 2.13)
-- Unsourced statistics (check 2.3)
-- Missing expert quotes (check 2.5)
-- Prose comparisons instead of tables (check 2.6)
-- Paragraphs too long (check 3.7)
-- Regional English inconsistencies (section 4)
-- Competitor topics not fully covered (check 7.1, if competitor analysis was performed)
-- Content gaps from competitor analysis remain unfilled (check 7.9, if competitor analysis was performed)
-
-**P2 (improve when possible):**
-- Sentence variety (check 3.8)
-- Filler words (check 3.9)
-- Internal linking suggestions (check 1.9)
-- Image alt text (check 1.12)
+**P2 (improve when possible):** 3.8 (sentence variety), 3.9 (filler words), 1.9 (internal links), 1.12 (alt text)
