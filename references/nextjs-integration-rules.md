@@ -99,9 +99,7 @@ When generating Next.js output, check if these components already exist in the p
 
 ### SchemaJsonLd Component
 
-Renders JSON-LD structured data in a `<script>` tag. Replaces the repeated `dangerouslySetInnerHTML` pattern.
-
-**TypeScript version:**
+Renders JSON-LD structured data in a `<script>` tag. Replaces repeated `dangerouslySetInnerHTML` patterns. For JS projects, remove type annotations.
 
 ```tsx
 interface SchemaJsonLdProps {
@@ -122,34 +120,11 @@ export function SchemaJsonLd({ schema }: SchemaJsonLdProps) {
 }
 ```
 
-**JavaScript version:**
-
-```jsx
-export function SchemaJsonLd({ schema }) {
-  const jsonLd = Array.isArray(schema)
-    ? { "@context": "https://schema.org", "@graph": schema }
-    : { "@context": "https://schema.org", ...schema };
-
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  );
-}
-```
-
-**Usage:** Pass a single schema object or an array for `@graph` combination:
-
-```tsx
-<SchemaJsonLd schema={[articleSchema, faqSchema, breadcrumbSchema]} />
-```
+**Usage:** `<SchemaJsonLd schema={[articleSchema, faqSchema, breadcrumbSchema]} />`
 
 ### FAQSection Component
 
-Renders the FAQ section with proper heading hierarchy and semantic HTML. Pairs with FAQPage schema.
-
-**TypeScript version:**
+Renders the FAQ section with semantic HTML (`<dl>`). Pairs with FAQPage schema. The `faq-answer` class on `<dd>` enables SpeakableSpecification targeting. For JS projects, remove type annotations.
 
 ```tsx
 interface FAQItem {
@@ -183,46 +158,14 @@ export function FAQSection({ items, headingLevel = "h3" }: FAQSectionProps) {
 }
 ```
 
-**Usage:**
-
-```tsx
-const faqItems = [
-  { question: "What is RAG?", answer: "RAG is an AI architecture..." },
-  { question: "How does RAG work?", answer: "RAG works by first..." },
-];
-
-<FAQSection items={faqItems} />
-```
-
-The `faq-answer` class on `<dd>` elements enables SpeakableSpecification targeting via the CSS selector `.faq-answer`.
-
 ### AnswerCapsule Component
 
-A semantic paragraph component with the `.answer-capsule` class for SpeakableSpecification targeting.
-
-**TypeScript version:**
+Semantic paragraph with `.answer-capsule` class for SpeakableSpecification targeting.
 
 ```tsx
-interface AnswerCapsuleProps {
-  children: React.ReactNode;
-}
-
-export function AnswerCapsule({ children }: AnswerCapsuleProps) {
+export function AnswerCapsule({ children }: { children: React.ReactNode }) {
   return <p className="answer-capsule">{children}</p>;
 }
-```
-
-**Usage:**
-
-```tsx
-<h2>What Is Retrieval-Augmented Generation?</h2>
-<AnswerCapsule>
-  Retrieval-Augmented Generation (RAG) is an AI architecture that combines
-  information retrieval with text generation to produce answers grounded in
-  external data. Instead of relying only on training data, RAG systems search
-  a knowledge base first, then generate responses using the retrieved documents
-  as context (Lewis et al., 2020).
-</AnswerCapsule>
 ```
 
 ### MetaTags Helper
@@ -409,17 +352,10 @@ Match the project's detected styling approach:
 
 ### Before Creating Any Component
 
-1. **Search the codebase first.** Before generating a new component, search for existing equivalents:
-   - `Grep` for `application/ld+json` to find existing schema rendering
-   - `Grep` for `FAQPage` or `faq` to find existing FAQ components
-   - `Grep` for `generateMetadata` or `metadata` exports to find existing meta patterns
-   - `Glob` for `**/seo/**`, `**/schema/**`, `**/meta/**` to find SEO utility directories
-
-2. **Reuse if found.** If an existing component handles the same concern, use it directly. Do not create a duplicate.
-
-3. **Extend if close.** If an existing component handles a similar concern but is missing a feature (e.g., a schema component that doesn't support `@graph`), extend it by adding the missing capability rather than creating a parallel component.
-
-4. **Create only if absent.** Only create new shared components when no equivalent exists in the project.
+1. **Search first:** `Grep` for `application/ld+json`, `FAQPage`, `generateMetadata`; `Glob` for `**/seo/**`, `**/schema/**`, `**/meta/**`
+2. **Reuse** if an existing component handles the same concern
+3. **Extend** if a similar component exists but is missing a feature
+4. **Create only if absent**
 
 ### Page Generation Patterns
 
