@@ -100,7 +100,7 @@ Use inline citation format: "Claim (Source, Year)."
 - "According to studies, most traffic comes from search." (vague, no number)
 - "73% of marketers agree that..." (made-up statistic with no real source)
 
-**CRITICAL: Never fabricate statistics.** Every number must come from a real source found via `WebSearch` or `WebFetch`. If you cannot find a real statistic to support a claim, use `[NEEDS DATA]` instead of inventing one. A paragraph without a statistic is always better than a paragraph with a fabricated one.
+**CRITICAL: Never fabricate statistics.** Every number must come from a real source found via `WebSearch` or `WebFetch`. Use `[NEEDS DATA]` for unverifiable claims. See [writing-rules.md](writing-rules.md) for full fabrication rules.
 
 ### Source Quality Hierarchy
 
@@ -116,17 +116,13 @@ Avoid citing other blog posts as primary sources. Go to the original research.
 
 ### NEVER Cite Direct Competitors
 
-**Absolute rule: Never cite, link to, quote from, or reference any direct competitor of the site you are generating content for.**
-
-A direct competitor is any company or website that offers the same or a substantially similar product, service, or content to the same target audience. Citing a competitor sends link equity to a rival, signals to search engines that the competitor is an authority, and risks sending readers to a competing product.
+**Absolute rule: Never cite, link to, quote from, or reference any direct competitor** (any company offering the same or similar product/service to the same audience).
 
 **What to do instead:**
 - Cite neutral third-party sources: research firms, analyst reports, academic papers, government data, trade publications
-- Cite industry experts who are not affiliated with a competing product
-- If a data point is only available from a competitor's site, search for the original research the competitor cited, or use a `[NEEDS DATA]` placeholder
-- When comparing products (e.g., "[Product] vs [Competitor]" sections), state factual capabilities without linking to the competitor's site. Use neutral review platforms (G2, Capterra, Trustpilot) as sources for competitor data instead.
-
-**How to identify competitors:** Before selecting citations, ask yourself: "Does this source offer a product or service that directly competes with the site I am writing for?" If yes, do not cite it. When in doubt, ask the user.
+- If a data point is only available from a competitor, find the original research or use `[NEEDS DATA]`
+- For "[Product] vs [Competitor]" sections, state factual capabilities without linking to the competitor. Use neutral review platforms (G2, Capterra, Trustpilot) as sources.
+- When in doubt whether a source is a competitor, ask the user.
 
 ### Freshness
 
@@ -164,10 +160,9 @@ Chen, VP of Engineering at Anthropic.
 
 1. Name the expert with their title and organization
 2. The quote must add information, not just restate what the text already says
-3. **NEVER fabricate quotes.** Every quote must come from a real, published source (interview, conference talk, blog post, press release, or official statement). Use `WebSearch` to find real quotes on the topic before writing.
-4. **Verify the person is real.** The expert you quote must be a real person with a verifiable role at the named organization. Do not invent expert names or titles.
-5. If real expert quotes are unavailable after searching, use direct statements from official sources (company blog posts, conference talks, published interviews). If no quotes can be found at all, omit the quote slot and flag it with `[NEEDS EXPERT QUOTE: topic]` for the user to fill.
-6. Position quotes after a relevant data point or claim they support
+3. **NEVER fabricate quotes.** Every quote must come from a real, published source. Use `WebSearch` to find real quotes before writing. Verify the person is real with a verifiable role.
+4. If no real quotes can be found, flag with `[NEEDS EXPERT QUOTE: topic]` for the user to fill
+5. Position quotes after a relevant data point or claim they support
 
 ---
 
@@ -280,32 +275,13 @@ Different AI systems extract and cite content differently. Apply these tips duri
 
 ## Content Structure for Maximum AI Extraction
 
-### Heading Hierarchy
+### Heading and Paragraph Rules
 
-```
-H1: [Primary keyword in clear title]
-  H2: [Question people search for]
-    H3: [Subtopic if needed]
-  H2: [Question people search for]
-    H3: [Subtopic]
-    H3: [Subtopic]
-  H2: Frequently Asked Questions
-    H3: [Question]
-    H3: [Question]
-```
+Follow the heading hierarchy and paragraph rules from [writing-rules.md](writing-rules.md). Key GEO additions:
 
-Rules:
-- One H1 per page
-- H2s phrased as questions when possible
-- No heading level skips (H1 > H3 is not allowed)
+- H2s phrased as questions when possible (matches "People Also Ask" queries)
 - Answer capsule immediately after each question-style H2
-
-### Paragraph Structure
-
-- 2-3 sentences per paragraph
-- First sentence makes the key claim
-- Second sentence provides evidence or data
-- Third sentence (optional) adds context or implication
+- First sentence of each paragraph makes the key claim; second provides evidence; third adds context
 
 ### List and Table Placement
 
