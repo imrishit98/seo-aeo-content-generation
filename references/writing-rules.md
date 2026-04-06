@@ -276,6 +276,42 @@ Match whatever pattern the existing content uses. If no existing content is avai
 
 ---
 
+## Factual Accuracy: Zero Tolerance for Fabrication
+
+**Absolute rule: Never fabricate any factual claim. Zero tolerance.**
+
+This is the single most important content integrity rule. A single made-up statistic, invented expert quote, or fabricated data point destroys the credibility of the entire piece and can cause real harm to the site's reputation, E-E-A-T signals, and rankings.
+
+### What Counts as Fabrication
+
+- Inventing a statistic ("73% of companies...")  without a real source
+- Making up an expert name or attributing a quote to someone who never said it
+- Citing a study, report, or survey that does not exist
+- Approximating or "rounding" data you are not sure about
+- Presenting training-data knowledge as a sourced fact without verifying it via live research
+- Creating fictional company names, case studies, or user testimonials
+- Inventing dollar figures, ROI numbers, or growth percentages
+
+### What to Do Instead
+
+1. **Search first.** Use `WebSearch` and `WebFetch` to find real, verifiable data before writing any factual claim.
+2. **Cite the real source.** Every statistic must include the source name and year: "Claim (Source, Year)."
+3. **Use placeholders when data is unavailable.** If you cannot find a real source for a claim, insert `[NEEDS DATA: description of what's needed]` and tell the user. Never substitute a made-up number.
+4. **Verify quotes are real.** Every expert quote must come from a published interview, conference talk, blog post, or official statement. Search for the exact quote or its source before including it.
+5. **Prefer no data over fake data.** A paragraph without a statistic is better than a paragraph with a fabricated one.
+
+### Self-Check
+
+After generating content, review every statistic, quote, and factual claim. For each one, confirm:
+- The source exists and is named
+- The number matches what the source actually reports
+- The quote is attributed to a real person who actually said it
+- The year is accurate
+
+If any claim cannot pass this check, replace it with a `[NEEDS DATA]` placeholder.
+
+---
+
 ## Post-Writing Self-Check
 
 Run through these checks before delivering content:
@@ -288,3 +324,4 @@ Run through these checks before delivering content:
 6. Read the opening paragraph. Does it sound like a human expert or a language model?
 7. Read the closing paragraph. Does it end with a banned closing phrase?
 8. Check for filler words. Remove any that add nothing to the meaning.
+9. **Verify every factual claim.** Check that every statistic, quote, and data point has a real, named source. Replace any unverifiable claims with `[NEEDS DATA]` placeholders.
