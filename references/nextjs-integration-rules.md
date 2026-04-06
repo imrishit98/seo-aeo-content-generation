@@ -2,6 +2,8 @@
 
 Rules for generating SEO/AEO content as production-ready Next.js code. Load this file only when the output format is JSX/React (Next.js). These rules ensure generated code fits the existing codebase, follows Next.js best practices, and stays DRY.
 
+**Default:** Examples use **JavaScript** and **`.jsx`** file extensions, since most integrations are JS projects. For TypeScript projects, use `.tsx`/`.ts`, add types, and mirror the same patterns.
+
 ---
 
 ## A. Smart Scan Procedure
@@ -37,7 +39,7 @@ Read `package.json` and extract:
 
 ### Step 3: Read Path Configuration
 
-Read `tsconfig.json` (TypeScript projects) or `jsconfig.json` (JavaScript projects). Extract:
+Read `jsconfig.json` (JavaScript projects) or `tsconfig.json` (TypeScript projects). Extract:
 
 - `compilerOptions.paths` to detect import aliases (e.g., `"@/*": ["./src/*"]`)
 - `compilerOptions.baseUrl` for module resolution
@@ -48,8 +50,8 @@ Use the detected alias pattern in all generated imports. If `@/` maps to `src/`,
 
 Read the root layout file to understand existing patterns:
 
-- **App Router:** `app/layout.tsx` or `src/app/layout.tsx`
-- **Pages Router:** `pages/_app.tsx` or `src/pages/_app.tsx`
+- **App Router:** `app/layout.jsx` or `src/app/layout.jsx` (or `.tsx` if the project uses TypeScript)
+- **Pages Router:** `pages/_app.jsx` or `src/pages/_app.jsx` (or `.tsx` if the project uses TypeScript)
 
 Record:
 - How metadata is currently handled (static `metadata` export, `generateMetadata`, `next-seo`, or manual `<Head>`)
@@ -66,9 +68,9 @@ Based on the content being generated, read files in the target area:
 |--------------|-----|
 | Existing pages in the same route segment (e.g., other pages under `app/blog/`) | Match page structure, data fetching patterns, and component usage |
 | Shared component directory (`components/`, `src/components/`) | Find existing reusable components to use instead of creating new ones |
-| SEO/schema utilities (`lib/schema.ts`, `utils/seo.ts`, `components/seo/`) | Reuse existing schema generation, meta tag helpers, or structured data utilities |
-| Layout files in the target route segment (`app/blog/layout.tsx`) | Understand shared layouts that wrap the generated page |
-| Data fetching utilities (`lib/data.ts`, `lib/api.ts`, `services/`) | Match existing data fetching patterns (fetch, Prisma, Supabase, CMS SDK, etc.) |
+| SEO/schema utilities (`lib/schema.js`, `utils/seo.js`, `components/seo/`) | Reuse existing schema generation, meta tag helpers, or structured data utilities |
+| Layout files in the target route segment (`app/blog/layout.jsx`) | Understand shared layouts that wrap the generated page |
+| Data fetching utilities (`lib/data.js`, `lib/api.js`, `services/`) | Match existing data fetching patterns (fetch, Prisma, Supabase, CMS SDK, etc.) |
 
 ### Step 6: Record Detected Patterns
 
@@ -77,7 +79,7 @@ After scanning, record these patterns for use during code generation:
 | Pattern | Detection Method | Impact on Generated Code |
 |---------|-----------------|-------------------------|
 | **Router type** | Presence of `app/` directory = App Router; `pages/` directory = Pages Router | Determines metadata API, file conventions, and data fetching approach |
-| **Language** | `typescript` in devDependencies, `.tsx` files present | Controls file extensions (`.tsx` vs `.jsx`), type annotations, and interface definitions |
+| **Language** | `typescript` in devDependencies, `.tsx` files present | Controls file extensions (`.jsx` vs `.tsx`), JSDoc vs type annotations |
 | **Styling** | Tailwind classes in existing components, CSS Module imports, styled-components usage | Controls how components are styled |
 | **Client boundaries** | `'use client'` directives in existing components | Determines where to place client boundaries in generated code |
 | **Data fetching** | `fetch()`, Prisma client, Supabase client, CMS SDK calls in existing pages | Match data fetching patterns in generated pages |
@@ -95,18 +97,14 @@ When generating Next.js output, check if these components already exist in the p
 1. Check if a `components/seo/` directory already exists. Use it if found.
 2. If not, check the project's primary component directory (`components/`, `src/components/`, `app/components/`). Create an `seo/` subdirectory inside it.
 3. If the project has no component directory convention, create `src/components/seo/`.
-4. Add a barrel export file (`index.ts` or `index.tsx`) if the project uses barrel exports elsewhere.
+4. Add a barrel export file (`index.js` or `index.jsx`) if the project uses barrel exports elsewhere.
 
 ### SchemaJsonLd Component
 
-Renders JSON-LD structured data in a `<script>` tag. Replaces repeated `dangerouslySetInnerHTML` patterns. For JS projects, remove type annotations.
+Renders JSON-LD structured data in a `<script>` tag. Replaces repeated `dangerouslySetInnerHTML` patterns.
 
-```tsx
-interface SchemaJsonLdProps {
-  schema: Record<string, unknown> | Record<string, unknown>[];
-}
-
-export function SchemaJsonLd({ schema }: SchemaJsonLdProps) {
+```jsx
+export function SchemaJsonLd({ schema }) {
   const jsonLd = Array.isArray(schema)
     ? { "@context": "https://schema.org", "@graph": schema }
     : { "@context": "https://schema.org", ...schema };
@@ -124,20 +122,10 @@ export function SchemaJsonLd({ schema }: SchemaJsonLdProps) {
 
 ### FAQSection Component
 
-Renders the FAQ section with semantic HTML (`<dl>`). Pairs with FAQPage schema. The `faq-answer` class on `<dd>` enables SpeakableSpecification targeting. For JS projects, remove type annotations.
+Renders the FAQ section with semantic HTML (`<dl>`). Pairs with FAQPage schema. The `faq-answer` class on `<dd>` enables SpeakableSpecification targeting.
 
-```tsx
-interface FAQItem {
-  question: string;
-  answer: string;
-}
-
-interface FAQSectionProps {
-  items: FAQItem[];
-  headingLevel?: "h2" | "h3";
-}
-
-export function FAQSection({ items, headingLevel = "h3" }: FAQSectionProps) {
+```jsx
+export function FAQSection({ items, headingLevel = "h3" }) {
   const HeadingTag = headingLevel;
 
   return (
@@ -162,8 +150,8 @@ export function FAQSection({ items, headingLevel = "h3" }: FAQSectionProps) {
 
 Semantic paragraph with `.answer-capsule` class for SpeakableSpecification targeting.
 
-```tsx
-export function AnswerCapsule({ children }: { children: React.ReactNode }) {
+```jsx
+export function AnswerCapsule({ children }) {
   return <p className="answer-capsule">{children}</p>;
 }
 ```
@@ -172,23 +160,22 @@ export function AnswerCapsule({ children }: { children: React.ReactNode }) {
 
 A utility function that builds the Next.js `Metadata` object from structured input. Only create this if the project does not already have a metadata helper or pattern.
 
-**TypeScript version (App Router):**
+**JavaScript (App Router):** use JSDoc so editors still understand the return type.
 
-```tsx
-import type { Metadata } from "next";
-
-interface MetaTagsInput {
-  title: string;
-  description: string;
-  canonicalUrl: string;
-  ogImage?: string;
-  ogType?: "website" | "article";
-  twitterCard?: "summary" | "summary_large_image";
-  keywords?: string[];
-  author?: string;
-}
-
-export function buildMetadata(input: MetaTagsInput): Metadata {
+```jsx
+/**
+ * @param {object} input
+ * @param {string} input.title
+ * @param {string} input.description
+ * @param {string} input.canonicalUrl
+ * @param {string} [input.ogImage]
+ * @param {"website"|"article"} [input.ogType]
+ * @param {"summary"|"summary_large_image"} [input.twitterCard]
+ * @param {string[]} [input.keywords]
+ * @param {string} [input.author]
+ * @returns {import("next").Metadata}
+ */
+export function buildMetadata(input) {
   return {
     title: input.title,
     description: input.description,
@@ -216,7 +203,7 @@ export function buildMetadata(input: MetaTagsInput): Metadata {
 
 **Usage in a page file:**
 
-```tsx
+```jsx
 import { buildMetadata } from "@/components/seo";
 
 export const metadata = buildMetadata({
@@ -240,17 +227,16 @@ Apply these rules to all generated Next.js code. They ensure the output follows 
 - **Pages Router:** Use `next/head` with `<Head>` component. Never use `document.title` or manual DOM manipulation.
 - **Dynamic metadata** (content depends on params, e.g., programmatic SEO pages): Use `generateMetadata` with `async` and `await params`.
 
-```tsx
-// App Router: static metadata
-export const metadata: Metadata = {
+```jsx
+// App Router: static metadata (JSDoc optional)
+/** @type {import("next").Metadata} */
+export const metadata = {
   title: "Page Title",
   description: "Page description",
 };
 
 // App Router: dynamic metadata (Next.js 15+)
-export async function generateMetadata(
-  { params }: { params: Promise<{ slug: string }> }
-): Promise<Metadata> {
+export async function generateMetadata({ params }) {
   const { slug } = await params;
   // ... fetch data based on slug
   return { title: "...", description: "..." };
@@ -268,19 +254,15 @@ export async function generateMetadata(
 
 In Next.js 15 and later, `params`, `searchParams`, `cookies()`, and `headers()` are async. Generated code must handle this:
 
-```tsx
+```jsx
 // Correct for Next.js 15+
-export default async function Page(
-  { params }: { params: Promise<{ slug: string }> }
-) {
+export default async function Page({ params }) {
   const { slug } = await params;
   // ...
 }
 
 // Correct for Next.js 13-14
-export default function Page(
-  { params }: { params: { slug: string } }
-) {
+export default function Page({ params }) {
   const { slug } = params;
   // ...
 }
@@ -296,7 +278,7 @@ Check the Next.js version detected in Step 2 of the Smart Scan to determine whic
 - Use `priority` for above-the-fold images (hero images, LCP candidates).
 - Configure `remotePatterns` in `next.config.js` if referencing external image domains.
 
-```tsx
+```jsx
 import Image from "next/image";
 
 <Image
@@ -309,22 +291,19 @@ import Image from "next/image";
 />
 ```
 
-### TypeScript
+### JavaScript vs TypeScript
 
-When the project uses TypeScript (detected in Step 2):
-
-- Use `.tsx` file extensions for components, `.ts` for utilities
-- Define interfaces for all component props
-- Type schema data objects explicitly
-- Type the `Metadata` import from `next`
-- Type `generateStaticParams` return values
-- Use `React.ReactNode` for children props
-
-When the project uses JavaScript:
+When the project uses **JavaScript** (default for this reference):
 
 - Use `.jsx` file extensions for components, `.js` for utilities
-- Use JSDoc comments for complex prop shapes if the project uses JSDoc elsewhere
-- Skip type annotations entirely (do not use TypeScript syntax in `.js` files)
+- Use JSDoc (`/** @type {import("next").Metadata} */`, `@param`, etc.) for complex shapes when it helps tooling
+- Skip TypeScript-only syntax (`interface`, `type`, generics on components) in source files
+
+When the project uses **TypeScript**:
+
+- Use `.tsx` for components, `.ts` for utilities
+- Define interfaces for component props where the project does so elsewhere
+- Type the `Metadata` import from `next` and `generateStaticParams` return values as appropriate
 
 ### Import Conventions
 
@@ -332,7 +311,7 @@ When the project uses JavaScript:
 - If `@/` alias is configured, use it: `import { SchemaJsonLd } from "@/components/seo"`
 - If no alias is detected, use relative imports: `import { SchemaJsonLd } from "../../components/seo"`
 - Match the project's export style: if the project uses named exports, use named exports. If it uses default exports for pages, use default exports for pages.
-- Match barrel export patterns: if `components/index.ts` re-exports, add new components to it.
+- Match barrel export patterns: if `components/index.js` re-exports, add new components to it.
 
 ### Styling
 
@@ -359,9 +338,9 @@ Match the project's detected styling approach:
 
 ### Page Generation Patterns
 
-**Single content page:** Generate `page.tsx` with `metadata` export, default page component, `SchemaJsonLd`, `AnswerCapsule`, and `FAQSection`. No inline `<script>` tags.
+**Single content page:** Generate `page.jsx` with `metadata` export, default page component, `SchemaJsonLd`, `AnswerCapsule`, and `FAQSection`. No inline `<script>` tags.
 
-**Programmatic SEO pages:** Generate dynamic route (`[slug]/page.tsx`) with `generateMetadata`, `generateStaticParams`, and a data layer providing unique content per param. See section E for details.
+**Programmatic SEO pages:** Generate dynamic route (`[slug]/page.jsx`) with `generateMetadata`, `generateStaticParams`, and a data layer providing unique content per param. See section E for details.
 
 ### Component Reuse Across Content Types
 
@@ -382,15 +361,16 @@ When the route is `programmatic-seo` and the output format is Next.js, use dynam
 ```
 app/
   [routePattern]/
-    page.tsx              # Page component with generateStaticParams
+    page.jsx              # Page component with generateStaticParams
     _data/
-      index.ts            # Data source: array of items with unique content per variable
-      types.ts            # TypeScript interfaces for the data (if TS project)
+      index.js            # Data source: array of items with unique content per variable
 ```
+
+If the project uses TypeScript, use `.tsx`/`.ts` and add a `types.ts` (or inline types) only where the codebase already does.
 
 ### generateStaticParams Pattern
 
-```tsx
+```jsx
 import { getAllItems } from "./_data";
 
 export async function generateStaticParams() {
@@ -401,13 +381,10 @@ export async function generateStaticParams() {
 
 ### generateMetadata Pattern
 
-```tsx
-import type { Metadata } from "next";
+```jsx
 import { getItemBySlug } from "./_data";
 
-export async function generateMetadata(
-  { params }: { params: Promise<{ slug: string }> }
-): Promise<Metadata> {
+export async function generateMetadata({ params }) {
   const { slug } = await params;
   const item = await getItemBySlug(slug);
 
@@ -424,4 +401,4 @@ export async function generateMetadata(
 
 Each item must include at minimum: `slug`, `metaTitle` (50-59 chars), `metaDescription` (140-160 chars), unique `content`, `faqItems`, and `schemaData`.
 
-Data sources: static TS/JS file, CMS API, database query (Prisma, Supabase), JSON/YAML file, or static template + dynamic data. Match the project's existing data fetching pattern from the Smart Scan.
+Data sources: static JS file, CMS API, database query (Prisma, Supabase), JSON/YAML file, or static template + dynamic data. Match the project's existing data fetching pattern from the Smart Scan.

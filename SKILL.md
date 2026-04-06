@@ -408,7 +408,7 @@ Append internal linking suggestions and the validation report as HTML comments o
 
 ### JSX / React (Next.js)
 
-Export a React component with Next.js `metadata` or `generateMetadata` for meta tags. Use the shared SEO components (`SchemaJsonLd`, `FAQSection`, `AnswerCapsule`) from [references/nextjs-integration-rules.md](references/nextjs-integration-rules.md) section B instead of inline boilerplate. Use TypeScript if the project uses TypeScript. Follow all conventions detected during the Smart Scan (Step 1.5).
+Export a React component with Next.js `metadata` or `generateMetadata` for meta tags. Use the shared SEO components (`SchemaJsonLd`, `FAQSection`, `AnswerCapsule`) from [references/nextjs-integration-rules.md](references/nextjs-integration-rules.md) section B instead of inline boilerplate. Default to JavaScript (`.jsx`); use TypeScript (`.tsx`) only if the project uses TypeScript. Follow all conventions detected during the Smart Scan (Step 1.5).
 
 **Before generating:** Check if these components already exist in the project. If not, create them in the project's component directory (default: `src/components/seo/`).
 
@@ -465,17 +465,17 @@ For Next.js projects, programmatic SEO pages should use dynamic route segments (
 app/
   glossary/
     [term]/
-      page.tsx              # Template component with generateStaticParams + generateMetadata
+      page.jsx              # Template component with generateStaticParams + generateMetadata
       _data/
-        index.ts            # Data source providing unique content per term
-        types.ts            # TypeScript interfaces (if TS project)
+        index.js            # Data source providing unique content per term
+        types.ts            # Optional: TypeScript interfaces (TS projects only)
 ```
 
 **Key rules for Next.js pSEO:**
 
 1. Use `generateStaticParams` to export all known parameter values for build-time static generation
 2. Use `generateMetadata` (not static `metadata`) since meta tags vary per page
-3. Separate content data from the page component: keep unique-per-page data in a data layer (`_data/` directory, CMS, database), keep the template in `page.tsx`
+3. Separate content data from the page component: keep unique-per-page data in a data layer (`_data/` directory, CMS, database), keep the template in `page.jsx` (or `page.tsx` if the project uses TypeScript)
 4. Reuse the shared SEO components (`SchemaJsonLd`, `FAQSection`, `AnswerCapsule`) across all generated pages
 5. Match the project's existing data fetching pattern detected during the Smart Scan
 6. See [references/nextjs-integration-rules.md](references/nextjs-integration-rules.md) section E for full implementation patterns
